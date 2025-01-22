@@ -2,84 +2,84 @@
 #     explorer "."
 # }
 
-gl() {
-    # Valores por defecto
-    NUM_COMMITS=10
-    VERBOSE=false
+# gl() {
+#     # Valores por defecto
+#     NUM_COMMITS=10
+#     VERBOSE=false
 
-    # Parsear los argumentos
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -n|--number)
-                if [[ "$2" =~ ^[0-9]+$ ]]; then
-                    NUM_COMMITS="$2"
-                    shift 2
-                else
-                    echo "Error: -n value must be a number." >&2
-                    return 1
-                fi
-                ;;
-            -v|--verbose)
-                VERBOSE=true
-                shift
-                ;;
-            *)
-                echo "Use: gl [-n | --number <cantidad>] [-v | --verbose]" >&2
-                return 1
-                ;;
-        esac
-    done
+#     # Parsear los argumentos
+#     while [[ $# -gt 0 ]]; do
+#         case "$1" in
+#             -n|--number)
+#                 if [[ "$2" =~ ^[0-9]+$ ]]; then
+#                     NUM_COMMITS="$2"
+#                     shift 2
+#                 else
+#                     echo "Error: -n value must be a number." >&2
+#                     return 1
+#                 fi
+#                 ;;
+#             -v|--verbose)
+#                 VERBOSE=true
+#                 shift
+#                 ;;
+#             *)
+#                 echo "Use: gl [-n | --number <cantidad>] [-v | --verbose]" >&2
+#                 return 1
+#                 ;;
+#         esac
+#     done
 
-    # Comando git log
-    if [ "$VERBOSE" = true ]; then
-        echo "Showing last $NUM_COMMITS commits"
-    fi
+#     # Comando git log
+#     if [ "$VERBOSE" = true ]; then
+#         echo "Showing last $NUM_COMMITS commits"
+#     fi
 
-    git log --oneline -n "$NUM_COMMITS"
-}
+#     git log --oneline -n "$NUM_COMMITS"
+# }
 
-gp() {
-    # Function to display error message and exit
-    die() {
-        echo "$1" >&2
-        return 1
-    }
+# gp() {
+#     # Function to display error message and exit
+#     die() {
+#         echo "$1" >&2
+#         return 1
+#     }
 
-    # Function to log messages if verbose mode is enabled
-    log() {
-        if [ "$VERBOSE" = true ]; then
-            echo "$1"
-        fi
-    }
+#     # Function to log messages if verbose mode is enabled
+#     log() {
+#         if [ "$VERBOSE" = true ]; then
+#             echo "$1"
+#         fi
+#     }
 
-    # Check if the current directory is a Git repository
-    log "Checking if the current directory is a Git repository..."
-    if ! git rev-parse --is-inside-work-tree &>/dev/null; then
-        die "Error: This directory is not a Git repository."
-        return 1
-    fi
+#     # Check if the current directory is a Git repository
+#     log "Checking if the current directory is a Git repository..."
+#     if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+#         die "Error: This directory is not a Git repository."
+#         return 1
+#     fi
 
-    # Get the current branch
-    CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
-    log "Current branch: $CURRENT_BRANCH"
+#     # Get the current branch
+#     CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
+#     log "Current branch: $CURRENT_BRANCH"
 
-    # Check for verbose flag
-    VERBOSE=false
-    if [[ "$1" == "-v" || "$1" == "--verbose" ]]; then
-        VERBOSE=true
-        shift
-        log "Verbose mode enabled."
-    fi
+#     # Check for verbose flag
+#     VERBOSE=false
+#     if [[ "$1" == "-v" || "$1" == "--verbose" ]]; then
+#         VERBOSE=true
+#         shift
+#         log "Verbose mode enabled."
+#     fi
 
-    # Push tags to the origin
-    log "Pushing to the origin..."
-    git push --tags origin "$CURRENT_BRANCH"
-    if [ $? -eq 0 ]; then
-        log "Pushed successfully to branch $CURRENT_BRANCH."
-    else
-        die "Error: Failed to push to the origin."
-    fi
-}
+#     # Push tags to the origin
+#     log "Pushing to the origin..."
+#     git push --tags origin "$CURRENT_BRANCH"
+#     if [ $? -eq 0 ]; then
+#         log "Pushed successfully to branch $CURRENT_BRANCH."
+#     else
+#         die "Error: Failed to push to the origin."
+#     fi
+# }
 
 gt() {
     # Function to display error message and exit
@@ -272,11 +272,11 @@ joya() {
     gl "-v"
 }
 
-pala() {
-    # Cambiar al directorio de trabajo
-    cd C:/fix-commits || die "Error: No se pudo cambiar al directorio C:/fix-commits"
-    echo "Ahora estás en el directorio C:/fix-commits"
-}
+# pala() {
+#     # Cambiar al directorio de trabajo
+#     cd C:/fix-commits || die "Error: No se pudo cambiar al directorio C:/fix-commits"
+#     echo "Ahora estás en el directorio C:/fix-commits"
+# }
 
 master() {
     VERBOSE=true
