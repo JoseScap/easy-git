@@ -380,6 +380,88 @@ glgtm_help() {
     echo "  - Performs a 'git push' to the 'master' branch and then runs 'git log'."
 }
 
+gmaster() {
+    local VERBOSE=true
+    local HELP=false
+    local MAIN_BRANCH=
+
+    # Comprobar si la rama 'main' existe
+    if git show-ref --quiet refs/heads/main; then
+        MAIN_BRANCH="main"
+    # Comprobar si la rama 'master' existe
+    elif git show-ref --quiet refs/heads/master; then
+        MAIN_BRANCH="master"
+    else
+        ilog $VERBOSE "Error: Neither 'main' nor 'master' branches found."
+        return 1
+    fi
+
+    # Procesar opciones del comando
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -nv|--no-verbose)
+                VERBOSE=false
+                shift
+                ;;
+            -h|--help)
+                HELP=true
+                shift
+                ;;
+            *)
+                echo "Usage: gmaster [-v | --verbose] [-h | --help]" >&2
+                return 1
+                ;;
+        esac
+    done
+
+    # Mostrar ayuda si se solicita
+    if [ "$HELP" = true ]; then
+        ilog $VERBOSE "Showing menu for 'gmaster' command."
+        gmaster_help
+        return
+    fi
+
+    # Verificar si hay cambios pendientes
+    ilog $VERBOSE "Checking for uncommitted changes..."
+    if ! git diff-index --quiet HEAD --; then
+        echo "Error: You have uncommitted changes. Please commit or stash them before running this command."
+        return 1
+    fi
+
+    # Cambiar a la rama master
+    ilog $VERBOSE "Switching to the '$MAIN_BRANCH' branch..."
+    git checkout "$MAIN_BRANCH" || {
+        echo "Error: Could not switch to '$MAIN_BRANCH' branch."
+        return 1
+    }
+
+    # Hacer un git pull
+    ilog $VERBOSE "Pulling the latest changes from '$MAIN_BRANCH'..."
+    git pull || {
+        echo "Error: Could not pull changes from '$MAIN_BRANCH'."
+        return 1
+    }
+
+    # Ejecutar el comando gl con verbose por defecto
+    ilog $VERBOSE "Executing 'glog' command with verbose mode..."
+    glog
+}
+
+gmaster_help() {
+    echo ""
+    echo "gmaster: Updates and synchronizes the local 'master' branch."
+    echo ""
+    echo "Usage: gmaster [-v | --verbose] [-h | --help]"
+    echo ""
+    echo "Options:"
+    echo "  -v, --verbose      Enable verbose mode for detailed logging."
+    echo "  -nv, --no-verbose  Disable verbose mode for minimal output."
+    echo "  -h, --help         Show this help message."
+    echo ""
+    echo "This command ensures that the local 'master' branch is up-to-date with the latest changes from the remote repository."
+    echo "It checks for uncommitted changes, switches to the 'master' branch, performs a pull from the remote, and then runs the 'glog' command."
+    echo ""
+}
 
 ghelp() {
     echo ""
@@ -392,6 +474,7 @@ ghelp() {
     echo "gpush: Pushes your changes to the remote repository. Use '-h' or '--help' for details."
     echo "gttw: Changes directory to the specified workstation directory. Use '-h' or '--help' for details."
     echo "glgtm: Pushes your changes directly to the master branch and then shows the Git log. Use '-h' or '--help' for details."
+    echo "gmaster: Updates and synchronizes the local 'master' branch with the remote repository. Use '-h' or '--help' for details."
     echo ""
 }
 
