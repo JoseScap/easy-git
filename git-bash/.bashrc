@@ -133,3 +133,4 @@ ghelp() {
     echo ""
 }
 
+ilog true "Initialized"
