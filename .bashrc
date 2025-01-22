@@ -8,7 +8,7 @@ ilog() {
     if [[ $verbose != "true" ]]; then
         return
     fi
-    echo "EASYGIT: $message"
+    echo "*** EASYGIT: $message"
 }
 
 nolog() {
