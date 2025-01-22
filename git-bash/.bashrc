@@ -124,24 +124,53 @@ glog_help() {
 
 gpush() {
     local VERBOSE=true
+    local TEST=false
+    local HELP=false
 
     if ! git rev-parse --is-inside-work-tree &>/dev/null; then
         ilog $VERBOSE "This directory is not a Git repository."
         return 1
     fi
 
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -nv|--no-verbose)
+                VERBOSE=false
+                shift
+                ;;
+            -t|--test)
+                TEST=true
+                shift
+                ;;
+            -h|--help)
+                HELP=true
+                shift
+                ;;
+            *)
+                echo "Use: gpush [-n | --number <cantidad>] [-v | --verbose] [-h | --help]" >&2
+                return 1
+                ;;
+        esac
+    done
+
     local CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
     ilog $VERBOSE "Working on current branch: $CURRENT_BRANCH"
 
-    git push --tags origin "$CURRENT_BRANCH"
+    
+    if [ "$TEST" == "true" ]; then
+        ilog $VERBOSE "Dry run mode. Changes won't be applied."
+        git push --tags --dry-run origin "$CURRENT_BRANCH"
+    else
+        git push --tags origin "$CURRENT_BRANCH"
+    fi
+
     if [ $? -eq 0 ]; then
         ilog $VERBOSE "Pushed successfully to branch $CURRENT_BRANCH."
     else
         ilog "Error: Failed to push to the origin."
         return 1;
     fi
-    
-}
+}}
 
 ghelp() {
     echo ""
