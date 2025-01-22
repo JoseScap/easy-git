@@ -122,6 +122,25 @@ glog_help() {
     echo ""
 }
 
+gpush() {
+    local VERBOSE=true
+
+    if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+        ilog $VERBOSE "This directory is not a Git repository."
+        return 1
+    fi
+
+    local CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
+    ilog $VERBOSE "Working on current branch: $CURRENT_BRANCH"
+
+    git push --tags origin "$CURRENT_BRANCH"
+    if [ $? -eq 0 ]; then
+        ilog $VERBOSE "Pushed successfully to branch $CURRENT_BRANCH."
+    else
+        die "Error: Failed to push to the origin."
+    fi
+}
+
 ghelp() {
     echo ""
     echo "EASYGIT is a library of commands to simplify your workflow"
