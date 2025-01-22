@@ -278,41 +278,41 @@ joya() {
 #     echo "Ahora estás en el directorio C:/fix-commits"
 # }
 
-master() {
-    VERBOSE=true
+# master() {
+#     VERBOSE=true
 
-    # Función para loguear mensajes si está habilitado el modo verbose
-    log() {
-        if [ "$VERBOSE" = true ]; then
-            echo "$1"
-        fi
-    }
+#     # Función para loguear mensajes si está habilitado el modo verbose
+#     log() {
+#         if [ "$VERBOSE" = true ]; then
+#             echo "$1"
+#         fi
+#     }
 
-    # Verificar si hay cambios pendientes
-    log "Checking for uncommitted changes..."
-    if ! git diff-index --quiet HEAD --; then
-        echo "Error: You have uncommitted changes. Please commit or stash them before running this command."
-        return 1
-    fi
+#     # Verificar si hay cambios pendientes
+#     log "Checking for uncommitted changes..."
+#     if ! git diff-index --quiet HEAD --; then
+#         echo "Error: You have uncommitted changes. Please commit or stash them before running this command."
+#         return 1
+#     fi
 
-    # Cambiar a la rama master
-    log "Switching to the 'master' branch..."
-    git checkout master || {
-        echo "Error: Could not switch to 'master' branch."
-        return 1
-    }
+#     # Cambiar a la rama master
+#     log "Switching to the 'master' branch..."
+#     git checkout master || {
+#         echo "Error: Could not switch to 'master' branch."
+#         return 1
+#     }
 
-    # Hacer un git pull
-    log "Pulling the latest changes from 'master'..."
-    git pull || {
-        echo "Error: Could not pull changes from 'master'."
-        return 1
-    }
+#     # Hacer un git pull
+#     log "Pulling the latest changes from 'master'..."
+#     git pull || {
+#         echo "Error: Could not pull changes from 'master'."
+#         return 1
+#     }
 
-    # Ejecutar el comando gl con verbose por defecto
-    log "Executing 'gl' command with verbose mode..."
-    gl -v
-}
+#     # Ejecutar el comando gl con verbose por defecto
+#     log "Executing 'gl' command with verbose mode..."
+#     gl -v
+# }
 
 pull() {
     VERBOSE=true

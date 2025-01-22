@@ -136,6 +136,11 @@ glog () {
     local NUMBER=$DEFAULT_COMMIT_NUMBERS
     local HELP=false
 
+    if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+        ilog $verbose "This directory is not a Git repository."
+        return 1
+    fi
+
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -nv|--no-verbose)
@@ -202,7 +207,7 @@ gpush() {
     local HELP=false
 
     if ! git rev-parse --is-inside-work-tree &>/dev/null; then
-        ilog $VERBOSE "This directory is not a Git repository."
+        ilog $verbose "This directory is not a Git repository."
         return 1
     fi
 
@@ -334,6 +339,11 @@ glgtm() {
     local VERBOSE=true
     local HELP=false
 
+    if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+        ilog $verbose "This directory is not a Git repository."
+        return 1
+    fi
+
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -nv|--no-verbose)
@@ -385,9 +395,15 @@ gmaster() {
     local HELP=false
     local MAIN_BRANCH=
 
+    if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+        ilog $verbose "This directory is not a Git repository."
+        return 1
+    fi
+
     # Comprobar si la rama 'main' existe
     if git show-ref --quiet refs/heads/main; then
         MAIN_BRANCH="main"
+    
     # Comprobar si la rama 'master' existe
     elif git show-ref --quiet refs/heads/master; then
         MAIN_BRANCH="master"
