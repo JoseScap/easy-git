@@ -292,7 +292,7 @@ gttw() {
                 shift
                 ;;
             *)
-                echo "Use: gttw [-v | --verbose] [-i | --init] [-h | --help]" >&2
+                echo "Use: gttw [-v | --verbose] [-h | --help]" >&2
                 return 1
                 ;;
         esac
@@ -330,6 +330,57 @@ gttw_help() {
     echo ""
 }
 
+glgtm() {
+    local VERBOSE=true
+    local HELP=false
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -nv|--no-verbose)
+                VERBOSE=false
+                shift
+                ;;
+            -h|--help)
+                HELP=true
+                shift
+                ;;
+            *)
+                echo "Use: glgtm [-nv | --no-verbose] [-h | --help]" >&2
+                return 1
+                ;;
+        esac
+    done
+
+    if [ $HELP = true ]; then
+        ilog $VERBOSE "Showing menu for 'glgtm' command."
+        glgtm_help
+        return
+    fi
+
+    ilog $VERBOSE "This work looks good to me, I'll proceed to push to master."
+
+    gpush
+    glog
+}
+
+glgtm_help() {
+    echo "Usage: glgtm [-nv | --no-verbose] [-h | --help]"
+    echo ""
+    echo "This command performs a quick review of the work and, if everything looks good,"
+    echo "proceeds to perform a 'git push' and then shows the Git log."
+    echo ""
+    echo "Options:"
+    echo "  -nv, --no-verbose   Disables verbose mode."
+    echo "  -h, --help           Shows this help message."
+    echo ""
+    echo "Actions performed:"
+    echo "  - If the -nv option is not specified, the command provides additional information"
+    echo "    during the process, including a confirmation message."
+    echo "  - If the -nv option is specified, detailed messages are omitted."
+    echo "  - Performs a 'git push' to the 'master' branch and then runs 'git log'."
+}
+
+
 ghelp() {
     echo ""
     echo "EASYGIT is a library of commands to simplify your workflow"
@@ -340,6 +391,7 @@ ghelp() {
     echo "glog: Displays a summary of recent Git commits. Use '-h' or '--help' for details."
     echo "gpush: Pushes your changes to the remote repository. Use '-h' or '--help' for details."
     echo "gttw: Changes directory to the specified workstation directory. Use '-h' or '--help' for details."
+    echo "glgtm: Pushes your changes directly to the master branch and then shows the Git log. Use '-h' or '--help' for details."
     echo ""
 }
 
