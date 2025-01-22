@@ -140,6 +140,7 @@ gpush() {
         ilog "Error: Failed to push to the origin."
         return 1;
     fi
+    
 }
 
 ghelp() {
