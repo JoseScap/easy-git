@@ -137,7 +137,8 @@ gpush() {
     if [ $? -eq 0 ]; then
         ilog $VERBOSE "Pushed successfully to branch $CURRENT_BRANCH."
     else
-        die "Error: Failed to push to the origin."
+        ilog "Error: Failed to push to the origin."
+        return 1;
     fi
 }
 
