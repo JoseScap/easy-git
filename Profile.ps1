@@ -354,7 +354,8 @@ function GMaster {
 
     # Verificar si hay cambios pendientes
     Write-Log -Verbose:$VerboseMode -Message "Checking for uncommitted changes..."
-    if (-not (git diff-index --quiet HEAD --)) {
+    $status = git status --porcelain
+    if ($status) {
         Write-Host "Error: You have uncommitted changes. Please commit or stash them before running this command."
         return 1
     }
