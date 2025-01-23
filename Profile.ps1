@@ -22,8 +22,8 @@ function Initialize-EasyGit {
     Write-Log -Verbose:$VerboseMode -Message "Initializing."
 
     # Check if the easygit directory and config file exist
-    if ((Test-Path "C:/easygit") -and (Test-Path "C:/easygit/easygit.config")) {
-        Write-Log -Verbose:$VerboseMode -Message "Everything is ready to work. 'C:/easygit' and 'easygit.config' already exist."
+    if ((Test-Path "C:/easygit") -and (Test-Path "C:/easygit/easygit.ps.config")) {
+        Write-Log -Verbose:$VerboseMode -Message "Everything is ready to work. 'C:/easygit' and 'easygit.ps.config' already exist."
         Write-Log -Verbose:$VerboseMode -Message "Reading config"
         Load-DefaultValues
         return
@@ -47,28 +47,28 @@ function Configure-EasyGit {
     Set-Location "C:/easygit"
 
     # Create the config file
-    Write-Log -Verbose:$VerboseMode -Message "Creating file 'easygit.config'"
-    New-Item -ItemType File -Path "C:/easygit/easygit.config" | Out-Null
+    Write-Log -Verbose:$VerboseMode -Message "Creating file 'easygit.ps.config'"
+    New-Item -ItemType File -Path "C:/easygit/easygit.ps.config" | Out-Null
 
     # Add initial configurations to the config file
-    Write-Log -Verbose:$VerboseMode -Message "Adding initial config to easygit.config"
-    Set-Content -Path "C:/easygit/easygit.config" -Value "DEFAULT_WORKSTATION="
-    Add-Content -Path "C:/easygit/easygit.config" -Value "DEFAULT_COMMIT_NUMBERS=10"
+    Write-Log -Verbose:$VerboseMode -Message "Adding initial config to easygit.ps.config"
+    Set-Content -Path "C:/easygit/easygit.ps.config" -Value "DEFAULT_WORKSTATION="
+    Add-Content -Path "C:/easygit/easygit.ps.config" -Value "DEFAULT_COMMIT_NUMBERS=10"
 
     # Open the file with VSCode
-    Write-Log -Verbose:$VerboseMode -Message "Opening file 'easygit.config' with VSCode"
-    Start-Process -FilePath "code" -ArgumentList "C:/easygit/easygit.config"
+    Write-Log -Verbose:$VerboseMode -Message "Opening file 'easygit.ps.config' with VSCode"
+    Start-Process -FilePath "code" -ArgumentList "C:/easygit/easygit.ps.config"
 }
 
 function Load-DefaultValues {
     # Check if the config file exists
-    if (-not (Test-Path "C:/easygit/easygit.config")) {
-        Write-Log -Verbose:$VerboseMode -Message "Config file 'easygit.config' does not exist."
+    if (-not (Test-Path "C:/easygit/easygit.ps.config")) {
+        Write-Log -Verbose:$VerboseMode -Message "Config file 'easygit.ps.config' does not exist."
         return
     }
 
     # Read configurations from the config file
-    $ConfigLines = Get-Content -Path "C:/easygit/easygit.config"
+    $ConfigLines = Get-Content -Path "C:/easygit/easygit.ps.config"
     foreach ($Line in $ConfigLines) {
         if ($Line -match "^(.*?)=(.*)$") {
             $Key = $Matches[1]
@@ -336,12 +336,10 @@ function GMaster {
         return 1
     }
 
-    # Comprobar si la rama 'main' existe
-    if (git show-ref --quiet refs/heads/main) {
+    $branches = git branch
+    if ($branches | Select-String -Pattern "main") {
         $MainBranch = "main"
-    }
-    # Comprobar si la rama 'master' existe
-    elseif (git show-ref --quiet refs/heads/master) {
+    } elseif ($branches | Select-String -Pattern "master") {
         $MainBranch = "master"
     } else {
         Write-Log -Verbose:$VerboseMode -Message "Error: Neither 'main' nor 'master' branches found."
