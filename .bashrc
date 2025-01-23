@@ -20,8 +20,8 @@ ginit() {
     ilog $VERBOSE "Initializing."
 
     # Check if we have the easydirectory and .config file
-    if [ -d "C:/easygit" ] && [ -f "C:/easygit/easygit.config" ]; then
-        ilog $VERBOSE "Everything is ready to work. 'C:/easygit' and 'easygit.config' already exist."
+    if [ -d "C:/easygit" ] && [ -f "C:/easygit/easygit.bash.config" ]; then
+        ilog $VERBOSE "Everything is ready to work. 'C:/easygit' and 'easygit.bash.config' already exist."
         ilog $VERBOSE "Reading config"
         gdefaultvalues
         return 0
@@ -46,26 +46,26 @@ gconfig() {
     
     # Crear el archivo '.config'
     ilog $VERBOSE "Creating file '.config'"
-    touch easygit.config
+    touch easygit.bash.config
     
     # Agregar configuraciones iniciales al archivo .config
-    ilog $VERBOSE "Adding initial config to easygit.config"
-    echo "DEFAULT_WORKSTATION=" > easygit.config
-    echo "DEFAULT_COMMIT_NUMBERS=10" >> easygit.config
+    ilog $VERBOSE "Adding initial config to easygit.bash.config"
+    echo "DEFAULT_WORKSTATION=" > easygit.bash.config
+    echo "DEFAULT_COMMIT_NUMBERS=10" >> easygit.bash.config
 
     # Abrir el archivo con VSCode
     ilog $VERBOSE "Opening file '.config' with VSCode"
-    code easygit.config
+    code easygit.bash.config
 }
 
 gdefaultvalues() {
-    # Verificar si el archivo easygit.config existe
-    if [ ! -f "C:/easygit/easygit.config" ]; then
-        ilog $VERBOSE "Config file 'easygit.config' does not exist."
+    # Verificar si el archivo easygit.bash.config existe
+    if [ ! -f "C:/easygit/easygit.bash.config" ]; then
+        ilog $VERBOSE "Config file 'easygit.bash.config' does not exist."
         return 1
     fi
 
-    # Leer las configuraciones desde el archivo easygit.config
+    # Leer las configuraciones desde el archivo easygit.bash.config
     while IFS='=' read -r key value; do
         case "$key" in
             "DEFAULT_WORKSTATION")
@@ -78,7 +78,7 @@ gdefaultvalues() {
                 # Ignorar otras configuraciones o líneas vacías
                 ;;
         esac
-    done < "C:/easygit/easygit.config"
+    done < "C:/easygit/easygit.bash.config"
 
     # Mostrar los valores cargados (opcional)
     ilog $VERBOSE "Loaded config:"
